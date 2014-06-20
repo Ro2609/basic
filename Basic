@@ -1,0 +1,141 @@
+package com.ro.basic;
+
+import java.util.Random;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.util.EnumHelper;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+@Mod(modid = Reference.MODID, name = Reference.NAME, version = Reference.MODVER)
+
+public class Basic{
+	
+	//Materials
+	public static ToolMaterial basicToolMaterial = EnumHelper.addToolMaterial("basic", 4, 2000, 40.0F, 10, 25);
+		
+	//Blocks
+	public static final Block basicBlock = new BasicBlock(Material.rock)
+	.setStepSound(Block.soundTypeStone)
+	.setCreativeTab(CreativeTabs.tabBlock)
+	.setLightLevel(1.0F)
+	.setHardness(1.5F)
+	.setBlockName("basicBlock");	
+	public static final Block basicOre = new BasicOre(Material.rock)
+	.setStepSound(Block.soundTypeStone)
+	.setCreativeTab(CreativeTabs.tabBlock)
+	.setHardness(4.0F)
+	.setBlockName("basicOre")
+	.setBlockTextureName(Reference.MODID + ":basicOre");
+	public static final Block basicLeaf = new BasicLeaf(Material.leaves)
+	.setCreativeTab(CreativeTabs.tabDecorations)
+	.setStepSound(Block.soundTypeGrass)
+	.setHardness(0.3F)
+	.setBlockName("basicLeaf")
+	.setBlockTextureName(Reference.MODID + ":basicLeaf")
+	.setLightOpacity(0)
+	.setLightLevel(1.0F);
+	
+	//Items
+	public static final Item basicItem = new BasicItem()
+	.setCreativeTab(CreativeTabs.tabMisc)
+	.setUnlocalizedName("basicItem")
+	.setMaxStackSize(64)
+	.setTextureName(Reference.MODID + ":basicItem");
+	
+	//Tools
+	public static final Item basicSword = new BasicSword(basicToolMaterial)
+	.setCreativeTab(CreativeTabs.tabCombat)
+	.setUnlocalizedName("basicSword")
+	.setMaxStackSize(1)
+	.setTextureName(Reference.MODID + ":basicSword");
+	public static final Item basicPick = new BasicPick(basicToolMaterial)
+	.setCreativeTab(CreativeTabs.tabTools)
+	.setUnlocalizedName("basicPick")
+	.setMaxStackSize(1)
+	.setTextureName(Reference.MODID + ":basicPick");
+	public static final Item basicShovel = new BasicShovel(basicToolMaterial)
+	.setCreativeTab(CreativeTabs.tabTools)
+	.setUnlocalizedName("basicShovel")
+	.setMaxStackSize(1)
+	.setTextureName(Reference.MODID + ":basicShovel");
+	public static final Item basicAxe = new BasicAxe(basicToolMaterial)
+	.setCreativeTab(CreativeTabs.tabTools)
+	.setUnlocalizedName("basicAxe")
+	.setMaxStackSize(1)
+	.setTextureName(Reference.MODID + ":basicAxe");
+	public static final Item basicHoe = new BasicHoe(basicToolMaterial)
+	.setCreativeTab(CreativeTabs.tabTools)
+	.setUnlocalizedName("basicHoe")
+	.setMaxStackSize(1)
+	.setTextureName(Reference.MODID + ":basicHoe");
+	
+	//Event Managers
+	EventManager oreManager = new EventManager();	
+	
+	@EventHandler
+	public void preInit(FMLPreInitializationEvent event){
+		/*Always register the blocks and items before the recipes
+		that is because if there's a recipe using a block or an item from your mod
+		The Game is going to crash when you try to perform the recipe*/
+		
+		//Blocks
+		GameRegistry.registerBlock(basicOre, "basicOre");
+		GameRegistry.registerBlock(basicBlock, "basicBlock");
+		GameRegistry.registerBlock(basicLeaf, "basicLeaf");
+		
+		//Items
+		GameRegistry.registerItem(basicItem, "basicItem");
+		
+		//Tools
+		GameRegistry.registerItem(basicSword, "basicSword");
+		GameRegistry.registerItem(basicPick, "basicPick");
+		GameRegistry.registerItem(basicShovel, "basicShovel");
+		GameRegistry.registerItem(basicAxe, "basicAxe");
+		GameRegistry.registerItem(basicHoe, "basicHoe");
+		
+		//World Generator
+		GameRegistry.registerWorldGenerator(oreManager, 1);
+		
+		//Recipes
+		GameRegistry.addRecipe(new ItemStack(Blocks.diamond_block, 64), new Object[]{
+			"y y",
+			"yxy",
+			"yyy",
+			'y', Blocks.sponge, 'x', Blocks.bedrock});
+		GameRegistry.addShapelessRecipe(new ItemStack(Blocks.diamond_block, 64),
+				Blocks.dirt, Blocks.dirt, Blocks.cobblestone, Blocks.cobblestone);
+		GameRegistry.addRecipe(new ItemStack(Blocks.diamond_block, 64), new Object[]{
+			"y y",
+			"yxy",
+			"yyy",
+			'y', Items.arrow, 'x', Items.apple});
+		GameRegistry.addRecipe(new ItemStack(Items.diamond, 64), new Object[]{
+			"y y",
+			" y ",
+			'y', Blocks.sponge});
+		GameRegistry.addRecipe(new ItemStack(Blocks.wool, 64, 8), new Object[]{
+			"yyy", 'y', Blocks.sponge});
+		GameRegistry.addRecipe(new ItemStack(Items.diamond), new Object[]{
+			"yyy", 'y', new ItemStack(Blocks.wool, 1, 8)});
+		GameRegistry.addShapelessRecipe(new ItemStack(Basic.basicBlock), Blocks.sponge);
+		GameRegistry.addSmelting(Blocks.sponge, new ItemStack(Blocks.diamond_block, 64), 400.0F);
+	
+	}
+	
+	@EventHandler
+	public void init(FMLInitializationEvent event){}
+}
